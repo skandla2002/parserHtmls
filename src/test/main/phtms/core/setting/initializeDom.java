@@ -11,10 +11,10 @@ public class initializeDom {
 		// TODO Auto-generated method stub
 		try {
 			//0. 초기값 확인하기
-			int modelcode;
-			String modelname;
-			int modelprice;
-			ArrayList list;
+			int modelcode = 0;
+			String modelname = null;
+			int modelprice = 0;
+			ArrayList list = null;
 			
 		// 1. 파일 읽어 오기
 		String filePath = "ErrorHtmlSample1.html"; // path+fileName
@@ -25,16 +25,20 @@ public class initializeDom {
 				modelcode = Integer.valueOf(split[0]);
 				modelname = split[1];
 				modelprice = Integer.valueOf(split[2]);
+
+				list.add(new Model(modelcode, modelname, modelprice));
 			}
 			
-			list.add(new Model((modelcode, mnodelname, modelprice));
+			in.close();
+			
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.exit(1);
 		}
 		// 4. 파일 쓰기
-		
+//		System.out.println(list.);
 		
 	}
 	
