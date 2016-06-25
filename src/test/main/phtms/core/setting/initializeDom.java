@@ -16,21 +16,26 @@ public class initializeDom {
 			int modelprice = 0;
 			ArrayList list = null;
 			
-		// 1. 파일 읽어 오기
-		String filePath = "ErrorHtmlSample1.html"; // path+fileName
-		BufferedReader in = new BufferedReader(new FileReader(filePath));
-		String s;
-			while((s= in.readLine()) != null){
-				String[] split = s.split("\t");
-				modelcode = Integer.valueOf(split[0]);
-				modelname = split[1];
-				modelprice = Integer.valueOf(split[2]);
-
-				list.add(new Model(modelcode, modelname, modelprice));
-			}
+			// 1. 파일 읽어 오기
+			String filePath = "ErrorHtmlSample1.html"; // path+fileName
+	//		BufferedReader in = new BufferedReader(new FileReader(filePath));
 			
-			in.close();
+			BufferedReader in = new BufferedReader(new FileReader("ErrorHtmlSample1.html"));
+			String s;
+				while((s= in.readLine()) != null){
+					String[] split = s.split("\t");
+					modelcode = Integer.valueOf(split[0]);
+					modelname = split[1];
+					modelprice = Integer.valueOf(split[2]);
+	
+					list.add(new Model(modelcode, modelname, modelprice));
+				}
+				
+				in.close();
 			
+			String inputData1 = "<html><head></head><body></body></html>";
+			String inputData2 = "<html><head></head><body></body></html>";
+			String outputData = "";
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
