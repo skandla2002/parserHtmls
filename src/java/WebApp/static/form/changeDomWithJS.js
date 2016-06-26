@@ -29,32 +29,35 @@ require(["htmlparser.js"],function(){
 			
 	};
 	
-	var chageRightDom = function (testHtmlDom){
+	var chageRightDom = function (initHtmlDom){
 
-		// 전처리
-		var modifyDom = testHtmlDom.replace("<\/","</");
+		// 전처리( '\' 제거, html tag 소문자로 만들기)
+		var modifyDom = initHtmlDom.replace("<\/","</");
+		modifyDom = _matchTag(modifyDom); 
 		
 		var result = "";
 		var countSet = []; // <html , </html , <head , </head , <body , </body
 		//1. seperate html / head / body
 		
 		var htmlArr = [];
-		var htmlStartPatt = new RegExp("<html","ig");
-		var htmlEndPatt = new RegExp("</html","ig");
+		var headArr = [];
+		var bodyArr = [];
+		
+		
+		var htmlStartPatt = new RegExp("<html","g");
+		var htmlEndPatt = new RegExp("</html","g");
 		countSet.push(modifyDom.match(htmlStartPatt).length);
 		countSet.push(modifyDom.match(htmlEndPatt).length);
 //		var htmlStartPatt = /<html/g;
 		
-		var headArr = [];
-		var headStartPatt = new RegExp("<head","ig");
-		var headEndPatt = new RegExp("</head","ig");
+		var headStartPatt = new RegExp("<head","g");
+		var headEndPatt = new RegExp("</head","g");
 		countSet.push(modifyDom.match(headStartPatt).length);
 		countSet.push(modifyDom.match(headEndPatt).length);
 		
 		
-		var bodyArr = [];
-		var bodyStartPatt = new RegExp("<body","ig");
-		var bodyEndPatt = new RegExp("</body","ig");
+		var bodyStartPatt = new RegExp("<body","g");
+		var bodyEndPatt = new RegExp("</body","g");
 		countSet.push(modifyDom.match(bodyStartPatt).length);
 		countSet.push(modifyDom.match(bodyEndPatt).length);
 		
@@ -70,19 +73,63 @@ require(["htmlparser.js"],function(){
 		}
 		
 		//3. make temp dom
-		var header = "";
-		var bodier = "";
+		var htmlStartArr = getMatchIndexes(modifyDom,"<html");
+		var htmlEndArr = getMatchIndexes(modifyDom,"</html");
+		var headStartArr = getMatchIndexes(modifyDom,"<head");
+		var headEndArr = getMatchIndexes(modifyDom,"</head");
+		var bodyStartArr = getMatchIndexes(modifyDom,"<body");
+		var bodyEndArr = getMatchIndexes(modifyDom,"</body");
+		
+		for(var i =0 ; i < headArr.lenght ; i ++){
+			headArr[i] = modifyDom.substr(headStartArr[i],headEndArr[i]-headStartArr[i]);
+			headArr[i] = headArr[i].substr(headArr[i].indexOf(">")+1);
+		}
+		for(var i =0 ; i < bodyArr.lenght ; i ++){
+			bodyArr[i] = modifyDom.substr(bodyStartArr[i],bodyEndArr[i]-bodyStartArr[i]);
+			bodyArr[i] = bodyArr[i].substr(bodyArr[i].indexOf(">")+1);
+		}
+		
+		var header = "<head>"+_setHtmlTags(headArr)+"</head>";
+		var body = "<body>"+_setHtmlTags(bodyArr)+"<body>";
+		
 		
 		//4. setHtml
-		result = header + bodier;
+		result = "<html>"+header + body+"</html>";
 		
-		//5. end html setting 
+		//5. end html setting
+		console.log(result);
 		return result;
+	}
+	
+	var _setHtmlTags = function(TagArr){
+		var resultTags = "";
+		for(var i =0 ; i < TagArr.length ; i++){
+			resultTags += TagArr[i];
+		}
+		return resultTags;
+	}
+	
+	// HtmlTag Lower	
+	var _matchTag = function(document){
+		// html 변경
+		document = document.replace("<HTML","<html");
+		document = document.replace("</HTML","</html");
+		
+		// head 변경
+		document = document.replace("<HEAD","<head");
+		document = document.replace("</HEAD","</head");
+		
+		// body 변경
+		document = document.replace("<BODY","<body");
+		document = document.replace("</BODY","</body");
+		
+		return document;
+		
 	}
 	
 	// Dom validation check
 	var _validationDom = function(countSet){
-		console.log("_validationDom",countSet);
+//		console.log("_validationDom",countSet);
 		var result = true;
 		var i = 0;
 		while(i < countSet.length ){
@@ -98,6 +145,21 @@ require(["htmlparser.js"],function(){
 		
 	}
 	
+	// count Multi index of Html
+	var getMatchIndexes = function (str, toMatch) {
+		var toMatchLength = toMatch.length,
+		indexMatches = [],
+		match,
+		i = 0;
+		
+		while ((match = str.indexOf(toMatch, i)) > -1) {
+			indexMatches.push(match);
+			i = match + toMatchLength;
+		}
+		
+		return indexMatches;
+	}
+
 	// 함수 실행
 	resultDom.result = chageRightDom(testHtmlDom);
 	
