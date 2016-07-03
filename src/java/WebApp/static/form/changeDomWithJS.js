@@ -29,9 +29,11 @@ require(["htmlparser.js"],function(){
 			
 	};
 	
+
+	// changeRigtDom 으로 최종 html return 함
 	var chageRightDom = function (initHtmlDom){
 
-		// 전처리( '\' 제거, html tag 소문자로 만들기)
+		// 0. 전처리( '\' 제거, html tag 소문자로 만들기)
 		var modifyDom = initHtmlDom.replace("<\/","</");
 		modifyDom = _matchTag(modifyDom); 
 		
@@ -43,21 +45,19 @@ require(["htmlparser.js"],function(){
 		var headArr = [];
 		var bodyArr = [];
 		
-		
 		var htmlStartPatt = new RegExp("<html","g");
 		var htmlEndPatt = new RegExp("</html","g");
-		countSet.push(modifyDom.match(htmlStartPatt).length);
-		countSet.push(modifyDom.match(htmlEndPatt).length);
-//		var htmlStartPatt = /<html/g;
-		
 		var headStartPatt = new RegExp("<head","g");
 		var headEndPatt = new RegExp("</head","g");
+		var bodyStartPatt = new RegExp("<body","g");
+		var bodyEndPatt = new RegExp("</body","g");
+
+		countSet.push(modifyDom.match(htmlStartPatt).length);
+		countSet.push(modifyDom.match(htmlEndPatt).length);
+
 		countSet.push(modifyDom.match(headStartPatt).length);
 		countSet.push(modifyDom.match(headEndPatt).length);
 		
-		
-		var bodyStartPatt = new RegExp("<body","g");
-		var bodyEndPatt = new RegExp("</body","g");
 		countSet.push(modifyDom.match(bodyStartPatt).length);
 		countSet.push(modifyDom.match(bodyEndPatt).length);
 		
@@ -80,14 +80,9 @@ require(["htmlparser.js"],function(){
 		var bodyStartArr = getMatchIndexes(modifyDom,"<body");
 		var bodyEndArr = getMatchIndexes(modifyDom,"</body");
 		
-		for(var i =0 ; i < headStartArr.length ; i ++){
-			headArr[i] = modifyDom.substr(headStartArr[i],headEndArr[i]-headStartArr[i]);
-			headArr[i] = headArr[i].substr(headArr[i].indexOf(">")+1);
-		}
-		for(var i =0 ; i < bodyStartArr.length ; i ++){
-			bodyArr[i] = modifyDom.substr(bodyStartArr[i],bodyEndArr[i]-bodyStartArr[i]);
-			bodyArr[i] = bodyArr[i].substr(bodyArr[i].indexOf(">")+1);
-		}
+		// Arr setting
+		headArr = modifySet(headStartArr, headEndArr, modifyDom);
+		bodyArr = modifySet(bodyStartArr, bodyEndArr, modifyDom);
 		
 		var header = "<head>"+_setHtmlTags(headArr)+"</head>";
 		var body = "<body>"+_setHtmlTags(bodyArr)+"<body>";
@@ -101,6 +96,18 @@ require(["htmlparser.js"],function(){
 		return result;
 	}
 	
+	
+	//  Arr setting
+	var modifySet = function(StartArr, EndArr, modifyDom){
+		var result = [];
+		for(var i =0 ; i < StartArr.length ; i ++){
+			result[i] = modifyDom.substr(StartArr[i],EndArr[i]-StartArr[i]);
+			result[i] = result[i].substr(result[i].indexOf(">")+1);
+		}
+		return result;
+	}
+	
+	// merge Arr tags  
 	var _setHtmlTags = function(TagArr){
 		var resultTags = "";
 		for(var i =0 ; i < TagArr.length ; i++){
