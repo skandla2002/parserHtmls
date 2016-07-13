@@ -1,0 +1,64 @@
+설치
+ng(core module)
+ng module은 AngularJS appl.이 시작될때 기본적으로 로드된다. 그 모듈 자체는
+AngularJS appl. 기능 중 필수 컴포넌트를 포함한다. 아래의 테이블 리스트에서
+높은 단계의 각 service, factory, filters, directives, 테스팅 컴포넌트의 유용
+함을 분석하였다.
+
+알려진 이슈
+1. angular.to.Json : 사파리 브라우저에서 유용하지 않은 값의 Date 객체를 stringify
+하면 null이 리턴오지 않고 RangeError가 떨어진다. 이것은 오직 Date.prototype.toJson
+메소드를 아래와 같이 따라하는 monkeypatch만이 신뢰할수 있는 방법이다.
+ex) var _DatetoJSON = Data.prototype.toJSON;
+    try{
+    	return _DatetoJSON.call(this);
+	}catch(e){
+    	if(e instanceof RangeError){
+    		return null;
+    	}
+    		throw e;
+    	}
+	};
+ https://github.com/angular/angular.js/pull/14221 를 참조하라
+
+2. angular.element : 만일 jasmine 1.x를 사용하면angular.element를 감시할 수 
+없습니다. https://github.com/angular/angular.js/issues/14251 를확인하세요
+
+3. ngClass :  ngClass directive가 동일한 element에 사용될때는 class 속성의 
+값으로 보간을 사용하지 않아야 합니다. 
+
+4. ngStyle : ngStyle directive가 동일 element에 존재하면 style 속성의 값으로
+보간을 사용하지 않아야 합니다.
+
+5. $interpolate : 보간의 마지막 기호가 포함된 보간 표현식은 현재 사용 가능하지 않습니다.
+예를 들어 "{{ '}}' }}"는 "{{ ' }} + ' }}"와 같이 표현되어야 합니다. 즉 보간 표현식에서
+싱글 쿼트는 ' }} 처럼 사용이 고려 되어야 합니다.
+
+모든 directives와 컴포넌트들은 공식적으로 {{ }} 로 사용되어져야 합니다. 만일 Appl.의
+보간 기호를 바꾼다면 $comple service는 custom기호를 비정규식화 하게 됩니다. 그 비정규
+화 과정은 공식적인 기호를 바꾸는것 만큼 합리적이지 않습니다. 그곳에서 그들은 일반적이지 않게
+보간 기호를 처리합니다. 예를들어 아래 코드와 같이 닫힌 브레이스를 잘못 비정규화 한다.
+ex) <div data-context='{"context":{"id":3,"type":"page"}}">
+   공백등이 추가 된다.
+    <div data-context='{"context":{"id":3,"type":"page"} }">
+ https://github.com/angular/angular.js/pull/14610#issuecomment-219401099
+ 에서 더 많은 정보를 확인 할 수 있다.
+ 
+--- Module COmponents
+
+--Function
+  angular.forEach : obj내의 item들을 한번씩 반복하는 호출이고, object/Array가
+   사용 가능하다. 이 반복 기능은 iterator(value, key, obj)로 호출되고, value는
+   객체 속성중 하나 또는 array 요소중 하나이고, key는 객체 속성 key 또는 array의
+   요소 index입니다. 그리고 obj는 객체 그 자신입니다. 함수에 대해 context를 지정하는
+   것은 선택사항 입니다.
+  angular.extend : 확장은 목적 객체 dst에 열거된 속성의 src 를 복사하여 dst 객체로
+   만드는 것입니다. 만일  원래 객체를 유지하려면, 빈 객체에 extend를 사용해야 한다.
+   ex) var object = angular.extend({},object1, object2);
+  angualr.merge : 깊은 확장으로 목적 객체 dst를 열거된 속성의 src로부터 복사하여 dst
+   객체로 만든다. src 객체를 여러개 추가 할수 있다. 원본 객체는 보전되려먼 빈 객체를 목표
+   로 해야한다.
+    ex) var object = angular.merge({}, object1, object2); 
+
+
+
