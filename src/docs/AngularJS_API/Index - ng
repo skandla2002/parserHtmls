@@ -128,4 +128,11 @@ ex) <div data-context='{"context":{"id":3,"type":"page"}}">
   form : FormController 를 인스턴스화 한 Directive 입니다.
   textarea : HTML textarea element를 angular data-binding으로 컨트롤 한다. 데이터
              바인딩과 해당 element의 검증 속성은 input element와 정확하게 일치한다.
-        
+  input : HTML input element를 조작한다. ngModel과 함께 사용될때, 이것은 data-binding
+         을 제공하고, input 상태를 조작하고, 검증할수 있다. input 조작은 HTML5 input types과
+       polyfills(낡은 브라우저에서 모던 코드를 쓸 수 있게 하는것)의 오래된 브라우저로 부터 검증
+       할 수 있다.
+  ngValue : <options> 또는 input[radio[의 값에 표현된 것을 값으로 바인딩 한다. 그래서
+           elements가 선택되었을때, element의 ngModel은 바인딩 값에 셋팅된다.
+  ngBind : ngBind 속성은 Angular가 특별한 표현식으로 주어진 HTML element의  텍스트
+              문서의에 대체된다. 그리고 text 문서는 표현식의 값이 변할때 수정 된다.
