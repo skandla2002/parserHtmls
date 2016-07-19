@@ -136,3 +136,15 @@ ex) <div data-context='{"context":{"id":3,"type":"page"}}">
            elements가 선택되었을때, element의 ngModel은 바인딩 값에 셋팅된다.
   ngBind : ngBind 속성은 Angular가 특별한 표현식으로 주어진 HTML element의  텍스트
               문서의에 대체된다. 그리고 text 문서는 표현식의 값이 변할때 수정 된다.
+  ngBindTemplate : ngBindTemplate 디렉티브는 element 텍스트 본문을 ngBindTemplate
+  			속성의 보간과 함께 대체한다고 정의 된다. ngBind와는 다르게 ngBindTemplate는
+  			다중 {{}}를 포함할 수 있다. 그 디렉티브는 HTML elements들이 SPAN element
+  			를 포함할 수 없는(TITLE, OPTIONS과 같은)이래로 필요하다.
+  ngBindHtml : 보간 표현과 element에 있는 HTML의 결과를 넣는데 보안적으로 넣을수 있다.
+             기본적으로 HTML 본문의 결과 는 $sanitize서비스를 사용하여 살균된다. 이 기능을
+             사용하려면 $sanitize는 유용하다는 확신이 있어야한다. 예를 들어 ngSanitize는
+           당신의 모듈 의존(Angular core가 아닌)하게 된다. 순서대로 ngSanitize를 너의 모듈이
+           의존한느 대로, 너는 "angular-sanitize.js"가 필요하다.
+  ngChange : 사용자가 input을 변경했을때주어진 표현식이 계산한다. 그 표현식은 즉시 계산되고
+   			불행이 자바스크립트는 계속된 변경 이벤트, 그리고 그것은 변경의 끝에 실행된다.
+   			(일반적으로 사용자가 element에서 떠나거나 return key를 누를때)         
