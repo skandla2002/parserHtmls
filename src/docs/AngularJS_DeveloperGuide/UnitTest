@@ -71,3 +71,126 @@ Unit Testing
    그들이 동시성화 되는 다른 모듈을 확장 할 수 있습니다. 동기화는 테스트를 더 깔끔하고 쉽게
    할 수 있습니다. ngMock의 가장 유용한 부분중 하나인 $httpBackend는 우리가 mock XHR 
    requests를 테스트에 사용하고 샘플 데이터를 대신 받아오는데 사용 된다.
+   
+- Controller 테스트
+ Angular는 뷰로부터 로직이 분리되어 있습니다. 이것은 controller가 테스트하기 쉽게 유지하여
+ 줍니다. 우리가 contoller를 테스트 하는 것을 보고 따라하세요. 그리고 그것은 패스워드의 길이
+ 에 기원하는 scope의 설정값을 셋팅합니다.
+ 
+ angular.module('app',[])
+ .controller('PasswordController', function PasswordController($scope){
+   $scope.password = '';
+   $scope.grade = function(){
+   		var size = $scope.password.length;
+   		if(size > 8){
+			$scope.strength = 'strong';
+		}else if(size > 3){
+			$scope.strength = 'medium';
+		}else{
+			$scope.strength = 'weak';
+		}
+	}
+ });
+ 
+ controller는 global scope에서는 유용하지 않기 때문에 angular.mock.inject 를 controller에
+ 처음에 inject하여 사용한다. 첫번째 단계로는 module function에 사용한다. 그리고 그것은
+ angular-mock를 제공한다. 모듈에서 이것이 주어져서 로드되면, 이것은 너의 테스트에 유용하게
+ 사용된다. 우리는 beforeEach를 통과하고, 그것은 functino Jasmine에서 제공되는 기능이다.
+ 우리가 각테스트 전에 기동되도록 한다. 그러면 우리는 inject를 컨트롤러 인스턴스화를 담당하는 서비스
+ $controller에 접근하여 사용할 수 있다.
+ 
+ describe('PasswordController', function(){
+ 	beforeEach(module('app'));
+ 	
+ 	var $controller;
+ 	
+ 	beforeEach(inject(function(_$controller_){
+ 		//인젝터는 매개변수의 이름이 일치할때에 언더스코어(_)에 감싸지 않는다.
+ 		 $controller = _$controller_;
+ }));
+ 
+ describe('$scope.grade', function(){
+ 	it('sets the strength to "strong" if the password length is >8 chars', function(){
+ 		var $scope = {};
+ 		var controller = $controller('PasswordController', { $scope: $scope});
+ 		$scope.password = 'longerthaneightchars';
+ 		$scope.grade();
+ 		expect($scope.strength).toEqual('strong');
+ 		});
+ 	});
+ });
+ 
+ describe 호출을 중첩하는 방법은 중요하다. 그리고 그것은 문자열을 호출할때 설명되고, 
+ 그 테스트는 더 깔끔해진다. 이것은 테스트하는 것을 문서화 하기 좋다. 그리고 그것은 당신이
+ 쉽게 한눈에 발생하는 일등을 볼 수 있다.지금 그 패스워드가 3글자 이하이면 테스트를 하나 
+ 추가하고, 그것은 $scope.strength를 "weak"로 설정한다.
+ 
+ describe('PasswordController', function(){
+ 	beforeEach(module('app'));
+ 	
+ 	var $controller;
+ 	baforeEach(inject(function(_$controller_){
+ 		//변수가 동일하게 맞는 경우로 부터이면 injector는 underscores를 포장하지 않는다.
+ 		$controller = _$controller_;
+ }));  
+ 		
+ describe('$scope.grade', function(){
+	  it('sets the strength to "strong" if the password length is >8 chars',
+	    var $scope = {};
+	    var controller = $controller('PasswordController, {$scope:$scope});
+	    $scope.password = 'longerthaneightchars';
+	    $scope.grade();
+	    expect($scope.strength).toEqual('strong');
+	  });
+	  
+	  it('sets the strength to "weak" if the password length <3 chars', function(){
+	  	var $scope = {};
+	  	var controller = $controller('PasswordController', {$scope: $scope});
+	  	$scope.password = 'a';
+	  	$scope.grade();
+	  	expect($scope.strength).toEqual('weak');  
+ 	  });
+  	});
+  });
+  지금 우리는 두개의 테스트를 가지고 있고, 테스트들은 중복된다. 둘다 $scope값을 생성해야만
+  하고 controller도 생성해야 한다. 우리는 새로는 테스트를 추가함으로써 이 중복이 오직 나쁜
+  쪽으로 가고 있다. 고맙게도 Jasmine은 beforeEach를 제공하고, 그것은 우리가 각 개별 테스트
+  전에 실행될수 있다. 우리의 테스트를 보자.
+  
+  describe('PasswordController', function(){
+ 	beforeEach(module('app'));
+ 	
+ 	var $controller;
+ 	
+ 	beforeEach(inject(function(_$controller_){
+ 		//인젝터는 매개변수의 이름이 일치할때에 언더스코어(_)에 감싸지 않는다.
+ 		 $controller = _$controller_;
+ }));
+ 
+  describe($scope.grade', function(){
+  	var $scope.controller;
+  	
+  	beforeEach(function(){
+  		$scope = {};
+  		controller = $controller('PasswordController', {$scope: $scope});
+  	});
+  	it('sets the strength to "strong" if the password length is >8 chars',
+  	function(){
+  		$scope.password = 'longerthaneightchars';
+  		$scope.grade();
+  		expect($scope.strength).toEqual('strong');
+	});
+  	
+  	if('sets the strength to "weak" if the passwod length < 3 chars', function()
+  		$scope.password = 'a';
+  		$scope.grade();
+  		expect($scope.strength).toEqual('weak');
+  	});
+  });
+ });
+ 
+ 우리는 중복됨을 beforeEach로 줄인다. 개별적인 테스트는 지금 오직 컨테이너에 두고, 
+ 특별한 조건을 테스트 하고 모든테스트에 접근하는 일반적인 문의 사항이 있습니다.당신의 테스트가
+ 기대한대로 였다면 beforeEach를 사용 할 수 있는간단한 테스트를 사용 했을때 유지되었다.
+ beforeEach는 오직 Jasmine제공의 한 부분입니다.
+  
