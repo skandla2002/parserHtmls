@@ -194,3 +194,37 @@ Unit Testing
  기대한대로 였다면 beforeEach를 사용 할 수 있는간단한 테스트를 사용 했을때 유지되었다.
  beforeEach는 오직 Jasmine제공의 한 부분입니다.
   
+- Test Filter 
+ Filters는 사용자의 읽을수 있는 형식 대이타를 변경해주는 기능입니다. 그들은 그들이 형식을
+ 프로그램의 로직으로 부터 서식 제거에 책임을 지므로 중요합니다. 게다가 프로그램 로직을 단순화
+ 합니다.
+ 
+ myModule.filter('length', function(){
+ 	return function(text){
+ 		return ('' + (text||'')).length;
+	}
+ });
+ 
+ describe('length filter',function(){
+ 	var $filter;
+ 	
+ 	beforeEach(inject(function(_$filter_){
+ 		$filter = _$filter_;
+ 	}));
+ 
+	it('return 0 when given null', function(){
+		var length = $filter('length');
+		expect(length(null)).toEqual(0);
+	});
+	
+	it('returns the correct value when given a string of chars', function(){
+		var length = $filter('length');
+		expect(length('abc')).toEqual(3);
+	});
+ });
+ 
+ 
+ --------------------------
+ 
+ seed project : https://github.com/angular/angular-seed
+ 
