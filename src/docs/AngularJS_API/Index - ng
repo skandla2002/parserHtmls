@@ -1,0 +1,150 @@
+설치
+ng(core module)
+ng module은 AngularJS appl.이 시작될때 기본적으로 로드된다. 그 모듈 자체는
+AngularJS appl. 기능 중 필수 컴포넌트를 포함한다. 아래의 테이블 리스트에서
+높은 단계의 각 service, factory, filters, directives, 테스팅 컴포넌트의 유용
+함을 분석하였다.
+
+알려진 이슈
+1. angular.to.Json : 사파리 브라우저에서 유용하지 않은 값의 Date 객체를 stringify
+하면 null이 리턴오지 않고 RangeError가 떨어진다. 이것은 오직 Date.prototype.toJson
+메소드를 아래와 같이 따라하는 monkeypatch만이 신뢰할수 있는 방법이다.
+ex) var _DatetoJSON = Data.prototype.toJSON;
+    try{
+    	return _DatetoJSON.call(this);
+	}catch(e){
+    	if(e instanceof RangeError){
+    		return null;
+    	}
+    		throw e;
+    	}
+	};
+ https://github.com/angular/angular.js/pull/14221 를 참조하라
+
+2. angular.element : 만일 jasmine 1.x를 사용하면angular.element를 감시할 수 
+없습니다. https://github.com/angular/angular.js/issues/14251 를확인하세요
+
+3. ngClass :  ngClass directive가 동일한 element에 사용될때는 class 속성의 
+값으로 보간을 사용하지 않아야 합니다. 
+
+4. ngStyle : ngStyle directive가 동일 element에 존재하면 style 속성의 값으로
+보간을 사용하지 않아야 합니다.
+
+5. $interpolate : 보간의 마지막 기호가 포함된 보간 표현식은 현재 사용 가능하지 않습니다.
+예를 들어 "{{ '}}' }}"는 "{{ ' }} + ' }}"와 같이 표현되어야 합니다. 즉 보간 표현식에서
+싱글 쿼트는 ' }} 처럼 사용이 고려 되어야 합니다.
+
+모든 directives와 컴포넌트들은 공식적으로 {{ }} 로 사용되어져야 합니다. 만일 Appl.의
+보간 기호를 바꾼다면 $comple service는 custom기호를 비정규식화 하게 됩니다. 그 비정규
+화 과정은 공식적인 기호를 바꾸는것 만큼 합리적이지 않습니다. 그곳에서 그들은 일반적이지 않게
+보간 기호를 처리합니다. 예를들어 아래 코드와 같이 닫힌 브레이스를 잘못 비정규화 한다.
+ex) <div data-context='{"context":{"id":3,"type":"page"}}">
+   공백등이 추가 된다.
+    <div data-context='{"context":{"id":3,"type":"page"} }">
+ https://github.com/angular/angular.js/pull/14610#issuecomment-219401099
+ 에서 더 많은 정보를 확인 할 수 있다.
+ 
+--- Module COmponents
+
+--Function
+  angular.forEach : obj내의 item들을 한번씩 반복하는 호출이고, object/Array가
+   사용 가능하다. 이 반복 기능은 iterator(value, key, obj)로 호출되고, value는
+   객체 속성중 하나 또는 array 요소중 하나이고, key는 객체 속성 key 또는 array의
+   요소 index입니다. 그리고 obj는 객체 그 자신입니다. 함수에 대해 context를 지정하는
+   것은 선택사항 입니다.
+  angular.extend : 확장은 목적 객체 dst에 열거된 속성의 src 를 복사하여 dst 객체로
+   만드는 것입니다. 만일  원래 객체를 유지하려면, 빈 객체에 extend를 사용해야 한다.
+   ex) var object = angular.extend({},object1, object2);
+  angualr.merge : 깊은 확장으로 목적 객체 dst를 열거된 속성의 src로부터 복사하여 dst
+   객체로 만든다. src 객체를 여러개 추가 할수 있다. 원본 객체는 보전되려먼 빈 객체를 목표
+   로 해야한다.
+    ex) var object = angular.merge({}, object1, object2); 
+  angular.noop : 작업을 하지 않도록 하는 function 입니다. 그 function은 functional
+   스타일로 작성할때 유용하게 사용할 수 있습니다.
+    ex) function foo(callback){
+          var result = calculateResult();
+          (callback || angular.noop)(result);
+        }
+  angular.identity : 첫번째 인자를 리턴하는 함수입니다. 그함수는 functional 스타일로
+   작성할때 유용하게 사용할 수 있습니다.
+  angular.isUndefined : 참조하는 것이 정의되지 않은 경우를 결정합니다.
+  angular.isDefined : 참조하는 것이 정의된 경우를 결정합니다.
+  angular.isObject : 참조하는 것이 object인 경우를 결정합니다. 자바스크립트의 typeof와
+   다릅니다. null은 object로 판단되지 않습니다. 그리고 자바스크립트 배열은 객체입니다.
+  angular.isString : 참조하는 것이 String임을 결정합니다.
+  angular.isNumber : 참조하는 것이 Number임을 결정합니다.
+  angular.isDate : 값이 date 임을 결정합니다.
+  angular.isArray : 참조하는 것이 Array임을 결정합니다.
+  angular.isFunction : 참조하는 것이 Function임을 결정합니다. 
+  angular.isElement : 참조하는 것이 DOM element 또는 jquery로 감싼 element임을
+                      결정합니다.
+  angular.copy : source의 깊은 복사를 생성하고, 그것은 객체 또는 array이어야 합니다.
+  angular.equals : 두개의 object, 두개의 값이 동등함을 결정합니다. 값과 정규식, array
+                   와 object가 지원됩니다.
+  angular.bind : fn이 self 바인딩 되어 function을 리턴합니다. 선택적으로 args를 지원
+                    할수 있으며, 그함수에 미리 바인딩 됩니다. 이 기능은 부분적인 기능으로 알려져
+             	있고, function currying과는 구별된다.
+  angular.toJson : JSON 포멧 string을 직렬화 한다. $$문자를 따르는 설정값은 angular
+                   자체적으로 자용되는 형태로 제거됩니다.
+  angular.fromJson : JSON string을 직렬화 복원한다.
+  angular.bootstrap : 수동으로 angular 프로그램을 시작할때 사용된다.
+  angular.reloadWithDebugInfo : 디버그 정보가 함께 동작하여 현재 application을 
+                                재기동하는데 사용한다.
+  angular.injector : 서비스를 검색할 수 있고 의존성 주입할 수 있는 injector object를
+                           생성한다. (깊은 injection)
+  angular.element : 원시 DOM element나jQuery element로서의 HTML string을 감싼다.
+  angular.module : angular.module은 Angular module의 검색, 등록, 생성을 위한 
+                        전역 영역입니다. 모든 모듈(angular core 또는 3rd party)은 이
+                        형태로 등록되어야 사용 할 수 있습니다.
+
+--Directive
+  ngJq : anuglar.element library를 강제로 디렉티브에 사용한다. 이것은 ng-jq를 떠나는
+         jqLite또는 window 하위의 jquery 변수 이름 설정에 모두 사용하기도 한다.
+  ngApp : auto-bootstrap하는 directive 입니다. ngApp 디렉티브는 어플리케이션의
+         root element를 구현하고, 해당 페이지의 root element 근처에 배치한다.
+         e.g. <body>, <html> tag에 사용
+  a : a tag 의 href 속성이 비어 있을때 기본 행위를 막고, html A tag의 기본 행위를 수정한다.
+  ngHref : href 속성에서 {{hash}}와 같이 표현하여 사용한다. Angular가 {{hash}} 표현내에
+             값을 대신하는 기회를 갖기 전에 이것을 클릭하면, 잘못된 URL로 가도록 link
+             를 만들어 준다. 
+  ngSrc : src 속성에 {{hash}} 형태로 사용하며바로 동작하지 않습니다. 이 브라우저는
+          {{hash}}안의 표현이 Angular로 대체될때 까지 {{hash}} 문자와 함께 URL에서
+             획득합니다. 그 ngSrc 디렉티브는 그 문제를 해결합니다.
+  ngSrcset : srcset 속성에 {{hash}}표현으로 Angular에서 사용되며 바로 동작하지는
+             않습니다. 브라우저가 {{hash}} 표현의 안이 Angular로 대체될때 까지 {{hash}}
+             텍스트와 함께 URL에서 획득할 것입니다.
+  ngDisabled : disabled 속성을 ngDisabled 안의 표현식을 boolean으로 평가하여 셋팅합니다.
+  ngChecked : checked 속성을 해당 element에 설정합니다. 만일 ngChecked내의 표현
+              식이 사실일 경우
+  ngReadonly : readonly 속성을 해당 element에 설정합니다. ngReadonly내의 표현식이
+           사실일 경우. 중요한 점은 readonly는 input elements내에 존재하는 특정 타입만
+         지원합니다. MDN의 input 관련 문서를 확인 하세요.
+  ngSelected : selected 속성을 해당 element에 설정합니다. 만일 ngSelected의 표현
+               식이 사실일 경우
+  ngOpen : ngOpen내의 표현식이 true일 경우 해당 element에 open 속성을 설정합니다.
+  ngForm : form 디렉티브의 중첩된 별칭입니다. HTML은 element로 부터의 중첩을 허용하지 않습니다.
+           이때 form 중첩에 유용하게 사용할 수 있습니다. 예를 들어 컨트롤할 소그룹의 효력이
+         결정 될때 필요합니다.
+  form : FormController 를 인스턴스화 한 Directive 입니다.
+  textarea : HTML textarea element를 angular data-binding으로 컨트롤 한다. 데이터
+             바인딩과 해당 element의 검증 속성은 input element와 정확하게 일치한다.
+  input : HTML input element를 조작한다. ngModel과 함께 사용될때, 이것은 data-binding
+         을 제공하고, input 상태를 조작하고, 검증할수 있다. input 조작은 HTML5 input types과
+       polyfills(낡은 브라우저에서 모던 코드를 쓸 수 있게 하는것)의 오래된 브라우저로 부터 검증
+       할 수 있다.
+  ngValue : <options> 또는 input[radio[의 값에 표현된 것을 값으로 바인딩 한다. 그래서
+           elements가 선택되었을때, element의 ngModel은 바인딩 값에 셋팅된다.
+  ngBind : ngBind 속성은 Angular가 특별한 표현식으로 주어진 HTML element의  텍스트
+              문서의에 대체된다. 그리고 text 문서는 표현식의 값이 변할때 수정 된다.
+  ngBindTemplate : ngBindTemplate 디렉티브는 element 텍스트 본문을 ngBindTemplate
+  			속성의 보간과 함께 대체한다고 정의 된다. ngBind와는 다르게 ngBindTemplate는
+  			다중 {{}}를 포함할 수 있다. 그 디렉티브는 HTML elements들이 SPAN element
+  			를 포함할 수 없는(TITLE, OPTIONS과 같은)이래로 필요하다.
+  ngBindHtml : 보간 표현과 element에 있는 HTML의 결과를 넣는데 보안적으로 넣을수 있다.
+             기본적으로 HTML 본문의 결과 는 $sanitize서비스를 사용하여 살균된다. 이 기능을
+             사용하려면 $sanitize는 유용하다는 확신이 있어야한다. 예를 들어 ngSanitize는
+           당신의 모듈 의존(Angular core가 아닌)하게 된다. 순서대로 ngSanitize를 너의 모듈이
+           의존한느 대로, 너는 "angular-sanitize.js"가 필요하다.
+  ngChange : 사용자가 input을 변경했을때주어진 표현식이 계산한다. 그 표현식은 즉시 계산되고
+   			불행이 자바스크립트는 계속된 변경 이벤트, 그리고 그것은 변경의 끝에 실행된다.
+   			(일반적으로 사용자가 element에서 떠나거나 return key를 누를때)         

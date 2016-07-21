@@ -1,0 +1,67 @@
+Anguar 1 문서 가이드
+이 페이지에서, 너는 공식적인 Angular 원리를 다양한 주제로 발견 할 것입니다.
+Anguar 1로 바로 시작했나요? 우리의 순서대로 개발하는 seed project를 작성하여 보세요.
+- Office Angular 1 Tutorial
+- Angular Seed
+
+Angular 1에대해 더 많은 것은 호가인할 준비가 되었나요?
+- Angular 1은 무엇인가?
+- 개념들의 개요
+
+중요 개념
+- Templates
+ : Angular 프로그램에서 서버에서 클라이언트로 데이터와 함께인 템플릿 페이지를 채워서
+ 옮겨야 합니다. 그 결과 동적인 페이리 Update를 구현할 수 있습니다. 그 이후 핵심 기능을
+ 사용 할 수 있습니다.
+  - Data binding
+  - Expressions
+  - interpolation
+  - Directives
+  - Views and routes (see the example)
+  - Filters
+  - HTML compiler
+  - Forms
+  
+- Application 구조
+ 1. 프로그램 연결: 의존성 주의(DI)
+ 2. 템플릿의 표현모델 : Scope
+ 3. Bootstrap: app의 기동
+ 4. 서버와의 통신: $http, $resource
+ 
+- 그외 기능들
+ 1. Animation: 핵식 개념, ngAnimate API
+ 2. 보안: 보안관련 문서, 엄격한 상황 벗어나는 방법, 보안 정책 내용, $sanitize, video
+ 3. 국제화 및 현지화: Angular Guide to i18n and L10n, date filer, currency filter
+                  다국어 지원 만들기
+- 테스트 기법
+ 1. 단위 테스트: Karma, Unit testing, Testing Services
+ 2. End to End 테스트: Protractor, e2e test guide
+
+- 커뮤니티 자원
+ : 우리는 다양원 요소의 커뮤니티를 지원할 가이드를 준비하였고, 거기에서 많은 추가 정보 와 다양한
+   주제의 자원, 무료 라이브러리들, 그리고 그외 많은 것들을 찾을 수 있다.
+   - External Angular 1 resources
+
+- 도와주기
+ : 당신의 특별한 이슈를 지원하기 위해 예시를 만들었고, 일을 하거나 안하거나 Plunker, JSFiddlr,
+   그외 다양한 사이트에 하나이상의 포스트를 남기면 된다.
+  1. Stancoverflow.com
+  2. Angular 1 mailing list
+  3. Angular 1 IRC channel
+
+- 공식 커뮤니케이션
+ : 공식적인 문의, 뉴스 그외 릴리즈 포스트는 우리 Blog, G+, 트위터를 통한다.
+  1. Angular Blog
+  2. Google +
+  3. Twitter
+  4. Angular on YouTube
+  
+- Angular 1에 기여하기
+ : 우리는 핵신 기여자는 Google이고 Angular는 수백의 협력자들과 오픈 소스 프로젝트를 지원
+  하고 있습니다. 당신이 준비되었을때 Angular에 기여하기 가이드를 읽어 보세요
+  
+- 놓친 부분인 있습니까?
+ : 여기에서 찾지 못한 부분이 있나요? External Angular 1 resources guide를 체크해
+ 보세요, 만일 당신이 최고의 Angular 1 자원이 해당 페이지에 추가할 만한 것이 있다면, 
+ Google +나 Twitter로 연락해주세요.
+             

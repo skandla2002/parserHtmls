@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html ng-app='app'>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body ng-controller ="main">
+	<div >
+		<input type='radio' ng-model='gender' value='male' >male</input>
+		<input type='radio' ng-model='gender' value='female'>female</input>
+	</div>
+	<input ng-model='firstName' type="text" placeholder="input your firstName"></input>
+	<input ng-model='lastName' type="text" placeholder="input your lastName"></input>
+	<input type="button" ng-click="signup()" value="sign up"></input>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+	<script src="./simpleController1.js"></script>
+</body>
+</html>

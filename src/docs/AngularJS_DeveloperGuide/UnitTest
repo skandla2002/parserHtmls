@@ -1,0 +1,230 @@
+Unit Testing
+ : javscript는 표현의 거대한 힘과 함께 있는 동적인 언어이다. 그러나 이것은 또한 컴파일러의
+ 도움없이는 도달할 수 없었다. 여러 이유 때문에 자바스크립트로 쓰여진 코드를 테스트 셋이 강력
+ 해야 한다고 우리는 매우 강하게 느낀다. 우리는 Angular에 많은 특징을 Angular App.의 쉬운
+ 테스트를 만들수 있게 설계하였다. Angular와 함께 테스트하지 못할 변명을 없다.
+ 
+관심사의 분리
+ : Unit Test는 이름에 내포하듯이 코드의 개별적 단위에 대한 테스트 이다. Unit test들은
+ "이 로직은 정확한가"나 "분류 기능순서가 정확한 순서로 나열되었나?"와 같은 질문에 답하기 위해
+ 노력하였다.
+ 
+ 질문에 대한 답변을 위해 우리가 테스트하에 독립적인 단위로 구별할수 있는것은 매우 중요하다.
+ 우리가 분류 기능을 테스트 할때 우리는 강제적으로 Dom elements나 XHR call에 정렬할 데이터
+ 를 가져오는 것에 대한 표시를 강제적으로 증가 시키는 것을 원하지 않는다.
+ 
+ 이것은 매우 명백하게 기존 프로젝트의 개별 기능과는 다르게 호출 될 수 있다. 그 이유는 개발자가 
+ 종종 전체에서 코드의 부분에 대한 고려 사항을 섞기 때문이다. 이것은 XHR requst를 만들때
+ 이것은 response data를 정렬하고 Dom을 조작한다.
+ 
+ Angular와 함께 우리는 당연한 것을 쉽게 만들 수 있다. XHR requests 때문에 우리는 의존석
+ 주입(DI)를 제공하였고, 그리새 우리는 request를 시뮬레이터 할 수 있다. DOM 때문에 우리는
+ 이것을 추상화 하고, 그래서 우리는 DOM의 직접적인 조작없이도 Model을 테스트 할 수 있다.
+ 우리의 test는  그 데이터는 생성하거나 DOM상태를 보거나, XHR requests의
+ 리턴 데이터를 기다리는 것 없이도 확인 assert 할 수 있다.
+ 
+- Angular appl.테스트를 위한 추가 tools
+ : Angular 어플리케이션 테스트를 위하여 설정 및 실행이 매우 쉽게 만들어 사용 가능한 일정한 
+ tools 이 여기있다.
+ 1. Karma:
+  Karma는 자바스크립트 실행 라인 tool이고 이것은 너의 테스트를 실행하고 소스코드를 로드할
+  웹서버를 생성하는데 사용할 수 있다. 너는 Karma가 브라우서 다수에 실행되도록 설정할 수 있고,
+  그것은 유용하게 모든 브라우저를 지원 할 수 있다고 확신 할 수 있다. Karma는 커맨드 라인에서
+  실행되고, 브라우저에서 실행하고 그 결과를 보여줍니다.
+  
+  Karma는 NodeJS application이고npm을 통해서 설치됩니다. 전체 설치에 대한 소개는 Karma
+  website에서 이용할 수 있습니다.
+  
+ 2. Jasmine:
+  Jasmine은 자바스크립트를 통한 행동주도개발 프레임워크 입니다. 그리고 그것은 더 많은 유명한
+  Angular appl.의 테스트를 선택할수 있게 됩니다. Jasmine은 너의 테스트 구성을 돕고, 
+  또한 assertions를 표시합니다. 너의 테스트들이 성장하기 위해 잘 구조화 하여 유지하고, 
+  문서화를 유지하는데 Jasmine은 큰 도움을 줍니다.
+  
+  Jasmin에서 우리는 descibe 기능을 함께테스트할 그룹에서 사용합니다.
+  "discribe('sorting the list of users', function(){
+   // 개별 테스트들이 들어가는 곳
+  });"
+  그리고 각각의 개별 테스트는 it 기능으로 불리도록 정의 됩니다.
+  "discribe('sorting the list of users', function(){
+    it('sorts in descending order by default', function(){
+      // 테스트 assertion이 들어가는 곳
+      });
+   }); "
+  describe 블럭으로 관련 테스트 들을 그룹화 하고, 개별 테스트를 it으로 불리도록 테스트
+  문서화 하면 discribing된다. 
+  결국 Jasmine은 너의 assertions를 만드는데 mathers를 제공합니다.
+  " describe('sorting the list of users', function(){
+    it('sorts in descending order by default', function(){
+      var users = ['jack','igor','jeff'];
+      var sorted = sortUsers(users);
+      expect(sorted).toEqual(['jeff','jack','igor']);
+     });
+    }); "
+  Jasmine은 assertions의 다양하게 만드는데 도움을 주는 matchers의 번호화 함께 제공
+  됩니다. 그리고 Jasmine 문서를 읽고, 그들이 하는 것을 보십시요. Karma를 이용한 Jasmine
+  이 우리는 karma-jasmin 테스트 실행자로 사용합니다.
+  
+  3. angular-mocks
+   : Angular는 ngMock모듈을 제공합니다. 그리고 그것은 너의 테스트들의 mocking을 제공합니다.
+   이것은 단위테스트에서  주입 및 모의 Angular service에 사용합니다. 추가적으로 이것은
+   그들이 동시성화 되는 다른 모듈을 확장 할 수 있습니다. 동기화는 테스트를 더 깔끔하고 쉽게
+   할 수 있습니다. ngMock의 가장 유용한 부분중 하나인 $httpBackend는 우리가 mock XHR 
+   requests를 테스트에 사용하고 샘플 데이터를 대신 받아오는데 사용 된다.
+   
+- Controller 테스트
+ Angular는 뷰로부터 로직이 분리되어 있습니다. 이것은 controller가 테스트하기 쉽게 유지하여
+ 줍니다. 우리가 contoller를 테스트 하는 것을 보고 따라하세요. 그리고 그것은 패스워드의 길이
+ 에 기원하는 scope의 설정값을 셋팅합니다.
+ 
+ angular.module('app',[])
+ .controller('PasswordController', function PasswordController($scope){
+   $scope.password = '';
+   $scope.grade = function(){
+   		var size = $scope.password.length;
+   		if(size > 8){
+			$scope.strength = 'strong';
+		}else if(size > 3){
+			$scope.strength = 'medium';
+		}else{
+			$scope.strength = 'weak';
+		}
+	}
+ });
+ 
+ controller는 global scope에서는 유용하지 않기 때문에 angular.mock.inject 를 controller에
+ 처음에 inject하여 사용한다. 첫번째 단계로는 module function에 사용한다. 그리고 그것은
+ angular-mock를 제공한다. 모듈에서 이것이 주어져서 로드되면, 이것은 너의 테스트에 유용하게
+ 사용된다. 우리는 beforeEach를 통과하고, 그것은 functino Jasmine에서 제공되는 기능이다.
+ 우리가 각테스트 전에 기동되도록 한다. 그러면 우리는 inject를 컨트롤러 인스턴스화를 담당하는 서비스
+ $controller에 접근하여 사용할 수 있다.
+ 
+ describe('PasswordController', function(){
+ 	beforeEach(module('app'));
+ 	
+ 	var $controller;
+ 	
+ 	beforeEach(inject(function(_$controller_){
+ 		//인젝터는 매개변수의 이름이 일치할때에 언더스코어(_)에 감싸지 않는다.
+ 		 $controller = _$controller_;
+ }));
+ 
+ describe('$scope.grade', function(){
+ 	it('sets the strength to "strong" if the password length is >8 chars', function(){
+ 		var $scope = {};
+ 		var controller = $controller('PasswordController', { $scope: $scope});
+ 		$scope.password = 'longerthaneightchars';
+ 		$scope.grade();
+ 		expect($scope.strength).toEqual('strong');
+ 		});
+ 	});
+ });
+ 
+ describe 호출을 중첩하는 방법은 중요하다. 그리고 그것은 문자열을 호출할때 설명되고, 
+ 그 테스트는 더 깔끔해진다. 이것은 테스트하는 것을 문서화 하기 좋다. 그리고 그것은 당신이
+ 쉽게 한눈에 발생하는 일등을 볼 수 있다.지금 그 패스워드가 3글자 이하이면 테스트를 하나 
+ 추가하고, 그것은 $scope.strength를 "weak"로 설정한다.
+ 
+ describe('PasswordController', function(){
+ 	beforeEach(module('app'));
+ 	
+ 	var $controller;
+ 	baforeEach(inject(function(_$controller_){
+ 		//변수가 동일하게 맞는 경우로 부터이면 injector는 underscores를 포장하지 않는다.
+ 		$controller = _$controller_;
+ }));  
+ 		
+ describe('$scope.grade', function(){
+	  it('sets the strength to "strong" if the password length is >8 chars',
+	    var $scope = {};
+	    var controller = $controller('PasswordController, {$scope:$scope});
+	    $scope.password = 'longerthaneightchars';
+	    $scope.grade();
+	    expect($scope.strength).toEqual('strong');
+	  });
+	  
+	  it('sets the strength to "weak" if the password length <3 chars', function(){
+	  	var $scope = {};
+	  	var controller = $controller('PasswordController', {$scope: $scope});
+	  	$scope.password = 'a';
+	  	$scope.grade();
+	  	expect($scope.strength).toEqual('weak');  
+ 	  });
+  	});
+  });
+  지금 우리는 두개의 테스트를 가지고 있고, 테스트들은 중복된다. 둘다 $scope값을 생성해야만
+  하고 controller도 생성해야 한다. 우리는 새로는 테스트를 추가함으로써 이 중복이 오직 나쁜
+  쪽으로 가고 있다. 고맙게도 Jasmine은 beforeEach를 제공하고, 그것은 우리가 각 개별 테스트
+  전에 실행될수 있다. 우리의 테스트를 보자.
+  
+  describe('PasswordController', function(){
+ 	beforeEach(module('app'));
+ 	
+ 	var $controller;
+ 	
+ 	beforeEach(inject(function(_$controller_){
+ 		//인젝터는 매개변수의 이름이 일치할때에 언더스코어(_)에 감싸지 않는다.
+ 		 $controller = _$controller_;
+ }));
+ 
+  describe($scope.grade', function(){
+  	var $scope.controller;
+  	
+  	beforeEach(function(){
+  		$scope = {};
+  		controller = $controller('PasswordController', {$scope: $scope});
+  	});
+  	it('sets the strength to "strong" if the password length is >8 chars',
+  	function(){
+  		$scope.password = 'longerthaneightchars';
+  		$scope.grade();
+  		expect($scope.strength).toEqual('strong');
+	});
+  	
+  	if('sets the strength to "weak" if the passwod length < 3 chars', function()
+  		$scope.password = 'a';
+  		$scope.grade();
+  		expect($scope.strength).toEqual('weak');
+  	});
+  });
+ });
+ 
+ 우리는 중복됨을 beforeEach로 줄인다. 개별적인 테스트는 지금 오직 컨테이너에 두고, 
+ 특별한 조건을 테스트 하고 모든테스트에 접근하는 일반적인 문의 사항이 있습니다.당신의 테스트가
+ 기대한대로 였다면 beforeEach를 사용 할 수 있는간단한 테스트를 사용 했을때 유지되었다.
+ beforeEach는 오직 Jasmine제공의 한 부분입니다.
+  
+- Test Filter 
+ Filters는 사용자의 읽을수 있는 형식 대이타를 변경해주는 기능입니다. 그들은 그들이 형식을
+ 프로그램의 로직으로 부터 서식 제거에 책임을 지므로 중요합니다. 게다가 프로그램 로직을 단순화
+ 합니다.
+ 
+ myModule.filter('length', function(){
+ 	return function(text){
+ 		return ('' + (text||'')).length;
+	}
+ });
+ 
+ describe('length filter',function(){
+ 	var $filter;
+ 	
+ 	beforeEach(inject(function(_$filter_){
+ 		$filter = _$filter_;
+ 	}));
+ 
+	it('return 0 when given null', function(){
+		var length = $filter('length');
+		expect(length(null)).toEqual(0);
+	});
+	
+	it('returns the correct value when given a string of chars', function(){
+		var length = $filter('length');
+		expect(length('abc')).toEqual(3);
+	});
+ });
+ 
+ 
+ --------------------------
+ 
+ seed project : https://github.com/angular/angular-seed
+ 
