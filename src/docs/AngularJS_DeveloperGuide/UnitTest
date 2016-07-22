@@ -223,7 +223,15 @@ Unit Testing
 	});
  });
  
+- Directives 테스트
+ AngularJS에서 디렉티브는 개인의 HTML tags, 속성, classes, comment와 함께 복잡한
+ 기능에서 탈비하기 위한 책임이 있다.
  
+ 간단한 HTML 속성 Directive
+ 
+ 의존하지 않는 Angular를 시작한다.
+ var app = angular.module('myApp',[]);
+  
  --------------------------
  
  seed project : https://github.com/angular/angular-seed
