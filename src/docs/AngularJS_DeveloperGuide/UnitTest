@@ -223,7 +223,64 @@ Unit Testing
 	});
  });
  
+- Directives 테스트
+ AngularJS에서 디렉티브는 개인의 HTML tags, 속성, classes, comment와 함께 복잡한
+ 기능에서 탈비하기 위한 책임이 있다.
  
+ 간단한 HTML 속성 Directive
+ 
+ 의존하지 않는 Angular를 시작한다.
+ 
+ var app = angular.module('myApp',[]);
+ 
+ 지금 우리는 우리의 app에 directive를 추가할 수 있다.
+ 
+ app.directive('aGreatEye', function(){
+ 	return {
+ 		restrict: 'E',
+ 		replace: true,
+ 		template: '<h1'lidless, weathed in flame, {{1+1}} times</h1>'
+ 	};
+ });
+
+ 이 directive는 <a-greate-eye></a-greate-eye>테그를 사용하곤한다. 이것은 또한 
+ template의 전체 테그와 교체된다. 지금 우리는 jasmine unit test를 이 기능적으로 검증
+ 하는데에 사용할 예정이다. 중요한 점은 이 표현식{{1+1}}번만큼 본문 렌더링을 평가할 것인다.
+ 
+ discribe('Unit testing great quotes', function(){
+ 	var $compile, $rootScope;
+ 	
+ 	//Load the myApp module, which contains the directive
+ 	beforeEach(module('myApp'));
+ 	
+ 	// Store references to $rootScope and $compile
+ 	// so they are available to all tests in this describe block
+ 	beforeEach(inject(function(_$compile_, _$rootScope_){
+ 		// The injector unwraps the underscores (_) from around the parameter
+ 		// names when matching
+ 		$compile = _$compile_;
+ 		$rootScope = _$rootScope_;
+ 	}));
+ 	
+ 	it('Replaces the element with the appropriate content', function(){
+ 		//Compile a piece of HTML containing the directive
+ 		var element = $compile("<a-greate-eye></a-greate-eye>")($rootScope);
+ 		//fire all the watches, so the scope expression {{1 + 1}} will be evaluated
+ 		$rootScope.$digest();
+ 		//Check that the compiled element contains the templated content
+ 		expect(element.html()).toContain("Lidless, wreathed in flame, 2 times");
+ 	});
+ });
+ 
+ 우리는 $compile 서비스와 $rootScope가 jasmine test전에 ineject 한다. $compile 서비스는 
+ aGrestEye directive가 렌더링 되기 전에 사용한다. 디렉티브를 렌더린 한 후에는 우리는 그 디렉티브가
+ 본문으로 대체 되었다고 생각한다. 그리고 "뚜껑 없는 불꼴의 고리 2가지"가 존재한다.
+ 
+ Underscore notation: 이거은 underscore 표기법(예: _$rootScope_)의 사용은 AngularJS
+ 	커뮤니티에서 퍼져있는 협약이다. 변수의 값은 유지하면서 테스트를 할수 있다. $injector는 선두의
+ 	부분과 후행 밑줄 사이에 파라미터가 매칭될때 사용한다.underscore규칙은 오직 이름이
+ 	시작하고 끝날때에 정확히 1개의 underscore가 있고 반면에 어떤 변경도 발생하지 않는다. 
+  
  --------------------------
  
  seed project : https://github.com/angular/angular-seed
