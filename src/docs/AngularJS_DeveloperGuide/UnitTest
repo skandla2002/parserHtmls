@@ -281,6 +281,108 @@ Unit Testing
  	부분과 후행 밑줄 사이에 파라미터가 매칭될때 사용한다.underscore규칙은 오직 이름이
  	시작하고 끝날때에 정확히 1개의 underscore가 있고 반면에 어떤 변경도 발생하지 않는다. 
   
+- Transclusion Directive 테스트
+ transclusion 을 사용하는 디렉티브는 컴파일러로 부터 특별하게 처리된다. 그들의 컴파일러 기능이 불려지기
+ 전에, 그 디렉티브의 엘리멘트가 포함된 본문은 엘리멘트와 trnasclusion function을 경유하는
+ 기능을 제공하는 것으로 부터 제거된다.
+ 
+ Before compilation:
+ <div transclude-directive>
+ 	Some transcluded content
+ </div>
+ 
+ After transclusion 추출 이후:
+ <div transclude-directive></div>
+ 
+ After compilation:
+ <div transclude-directive>
+ 	Som Template
+ 	<span ng-transclude>Some transcluded content</span>
+ </div>
+ 
+ 만일 'element' transclution이 사용되는 디렉티브이면, 그 compiler는 DOM과 주석노드와
+ 함께 directive의 전체요소가 제거된다. 그 컴파일러는 그러면서 디렉티브의 템플릿을 주석 노드
+ 포함하여 형제로써 추가한다.
+ 
+ Before compilation
+ <div element-transclude>
+ 	Some Content
+ </div>
+ 
+ After transclusion 추출
+ <!-- elementTransclude -->
+ 
+ After compilation
+ <!--elementTransclude -->
+ <div element-transclude>
+ 	Some Template
+ 	<span ng-transclude>Some transcluded content</span>
+ </div>
+
+ 디렉티브틔 테스트를 작성시에 element transclusion을 사용할때, 이것에 대해 아는 것은
+ 중요하다. 만일 DOM 일부의 root element에 디렉티브가 존재하고, 당신이 $compile로
+ 실행하면, 그 DOM node는 linking function으로부터 리턴된다. 그리고 comment node는
+ template과 transcluded 본문에 적근이 가능하여 잃어 버릴 수도 있습니다. 
+ 
+ var node = $compile('<div><div element-transclude></div></div>')($rootScope);
+ var contents = node.contents();
+ expect(contents[0].nodeType).toEqual(node.COMMENT_NODE);
+ expect(contents[1].nodeType).toEqual(node.ELEMENT_NODE);
+ 
+ 외부 템플릿과 디렉티브 테스트
+ 만일 temptateUrl을 사용한다면 karma-ng-html2js-preprocessor사용을 고려하세요
+ (https://github.com/karma-runner/karma-ng-html2js-preprocessor)
+ HTML tempates와 거기게 HTTP넘어서 로딩하는 것을 피할 수 있습니다. 반면에 당신은
+ 아마 테스트 폴더를 계층구조를 어플리케이션과 다르게 가져가야 합니다.
+ 
+- Promises 테스트
+ promises를 테스트 할때는 digest cycle의 연결된 promises의 해결 방법에 대하여 아는
+ 것은 중요합니다. 이것은 promises의 then, catch, finally에 대해 콜백함수는 오직
+ digest가 동작한 후에 불려진다는 것을 의미합니다. 테스트에서 당신을 스코프의 $applay 
+ function이 블려져서 trigger 된다. 만일 단신이 너의 테스트에 scope를 가지고 있지 않으면, 
+ 너는 $rootScope와 $applay를 그것에 불러서 inject 할 수 있다. 또한 $q 서비스 문서의
+ 프로미스로 테스트 의 예가 된다.
+ 
+ Using beforeAll()
+ : Jasmine의 beforeAll()과 mocha's의 before()는 test설정이 분배되어 유용하게 되면 
+ 낚아 챈다. 테스트의 runtime을 줄이거나 또는 테스트 케이스의 많은 초점을 쉽게 만든다.
+ 기본적으로 ngMock은 inject를 테스트 케이스당 하나를 생성한다. 각각의 영향을 받지 않는 테
+ 스트라면 확실하다. 그러만 망리 beforsAll()를 사요하기 원한다면, ngMock은 어떤 test cases
+ 를 동작하기 전에 injector를 생성해야한다. 그리고 describe에게 모든 case를 injector
+ 롤 분배해야한다. module.sharedInjector()가 오게되면, 이것은 describe 범위안에서 
+ 불려지고, single injector는 모든 hooks와 테스트 케이스기 동작하는 블락 사이에서 분배
+ 된다. 
+  아래의 예시를 보면 우리는 테스트 서비스를 오랜시간 이것의 답이 생성되도록 한다. assertions의
+  모든 것을 피하고, 우리는 single test case를 작성하는 것을 원하기 때문에, module.sharedInjector()
+  그리고 Jasmine's beforeAll()은 오직한번 서비스에서 기동된다. 이 테스트 케이스는 설정값이
+  서비스 인스턴스에서 추가되는 것에 대하여 모든 assertions를 생성한다.
+  
+  describe("Deep Thought", function(){
+  	module.sharedInjector();
+  	beforeAll(module("UltimateQuestion"));
+  	beforeAll(inject(function(DeepThought){
+  		expect(DeepThought.answer).toBeUndefinded();
+  		DeepThought.generateAnswer();
+  	}));
+  	
+  	it("has calculated the answer correctly", inject(function(DeepThought){
+  		//Because of sharedInjector, we have access to the instance of  the DeepThought service
+  		// that wa proviede to the beforeAll() hook. Therefore we can test the generated answer
+  		expect(DeepThought.answer).toBe(42);
+  	}));
+  	
+  	it("has calculated the answer within the expected time", inject(function(DeepThought)
+	{
+		expect(DeepThought.runTimeMillennia).toBeLessThan(8000);
+	}));
+ 	
+ 	it("has double checked the answer", inject(function(DeepThought){
+ 		expect(DeepThought.absoutelySereItIsTheRightAnser).toBe(true);
+ 	}));
+ });
+
+ 
+
  --------------------------
  
  seed project : https://github.com/angular/angular-seed
