@@ -147,4 +147,50 @@ ex) <div data-context='{"context":{"id":3,"type":"page"}}">
            의존한느 대로, 너는 "angular-sanitize.js"가 필요하다.
   ngChange : 사용자가 input을 변경했을때주어진 표현식이 계산한다. 그 표현식은 즉시 계산되고
    			불행이 자바스크립트는 계속된 변경 이벤트, 그리고 그것은 변경의 끝에 실행된다.
-   			(일반적으로 사용자가 element에서 떠나거나 return key를 누를때)         
+   			(일반적으로 사용자가 element에서 떠나거나 return key를 누를때)    
+  ngClass : ngClass 디렉티브는 항상 동적으로 CSS클래스를 셋팅한다. 데이터 바인딩 표현으로
+  			HTML 요소로도 사용된다. 그것은 모든 classes에 추가되어 표현될수 있다.
+  ngClassOdd : ngCLassOdd와 ngClassEven디렉티브는 ngRepeat와 결합 한다는 점과 홀(짝)row
+                    들에 대해서만 영향을 받는다는 것만 제외하고ngClass로서 정확히 동작한다.  			
+  ngClassEven : ngCLassOdd와 ngClassEven디렉티브는 ngRepeat와 결합 한다는 점과 홀(짝)row
+                    들에 대해서만 영향을 받는다는 것만 제외하고ngClass로서 정확히 동작한다.
+  ngCloak : ngCloak 디렉티브는 Appl.이 컴파일되어 브라우저에 간략하게 보여지는 것으로
+            부터 Angular HTML template에 사용된다. 이 디렉티브는 html template가 보여서
+            야기되는 바람직하지 않은 flicker 효과를 피하기 위해 사용된다.
+  ngController : ngController directive는 controller class에 보이는 것에 추가한다.
+                 이것은 MVC 디자인 패턴의 뒤에 원리로 angular 지원에 중요한 측면이다.			
+  ngCsp : Angular는 몇가지 특징(Content Security Policy 규칙을 깰수 있는)을 갖고
+          있다.
+  ngClick: ngClick 디렉티브는 특별한 사용자정의가 허용된다. 해당 element가 click되면
+  ngDbclick: ncDbclick 디렉티브는 더블클릭 이벤트에 사용자 정의가 허용된다.
+  ngMousedown : ngMousedown 디렉티브는 마우스 다운 이벤트에서 사용자 정의가 허용된다.
+  ngMouseup: ngMouseup 디렉티브는 마우스 up이벤트에 사용자 정의가 허용된다.
+  ngMouseover: 마우스 오버에 사용자 정의가 허용된다.
+  ngMouseenter: 마우스 엔터 이벤트에 사용자 정의가 허용된다.
+  ngMouseleave: 마우스leave 이벤트에 사용자 정의가 허용된다.
+  ngMousemove: 마우스move이벤트에 사용자 정의가 허용된다.
+  ngKeydown: keydown이벤트에 사용자 정의가 허용된다.
+  ngKeyup: keyup이벤트에 사용자 정의가 허용된다.
+  ngKeypress: keypress이벤트에 사용자 정의가 허용된다.
+  ngSubmit: angular 표현식에 onsubmit 이벤트를 바인딩 할 수 있다.
+  ngFocus : focus이벤트에 사용자정의가 허용된다.
+  ngBlur: blur 이벤트에 사용자 정의가 허용된다.
+  ngCopy: copy이벤트에 사용자 정의가 허용된다.
+  ngCut: cut 이벤트에 사용자 정의가 허용된다.
+  ngPaste: paste이벤트에 사용자 정의가 허용된다.
+  ngIf: ngIf 디렉티브는 제거나 재생성 할수있다. DOM tree에 {} 표현식에 기반을 둔 임무를
+        만일 표현식이 ngIf에 flase 값이면 해당 element는 DOM에서 제거되고, 반대의 경우
+        element는 DOM 안에 다시 추가된다.
+  ngInclude: 외부 HTML 부분으로 Fetches, compiles, includes된다.
+  ngInit: ngInit 디렉티브는 현재의 스코프에 표현식을 평가 할 수있다.
+  ngList: Text 입력시 구분된 string과 string들의 배열을 합쳐서 추가한다. 기본적으로
+          구분자는 ','를 따른다.-예를 들어 ng-list", ". ngList 속성에 사용자정의 구분자를
+         넣을 수도 있다. 예를 들어 ng-list"|".
+  ngModel: ngModel디렉티브는 input, select, textarea(또는 사용자 정의)의 스코프에
+              있는 프로퍼티에서 NgModelController레 바인딩 되어 있고, 이것은 이 디렉티브로 
+              부터 생성되어 노출된다.
+  ngModelOptions: model update가 되는때에 어떻게 수정할 수 있는지 알려준다. ngModelOptions를
+  				사용하면 특별한 사용자 정의 이벤트를 생성할 수 있습니다. 그것은 model update또는 
+  				바인딩을 지연하는 형태로 trigger 된기 때문에 실제로 update는 타이버가 만료되었을 
+  				때에 발생한다. 그 timer는 다른 변화가 발생한 후에 reset 된다. 
+        
