@@ -1,0 +1,39 @@
+<!Doctype html>
+<html>
+<head>
+	<meta charset='utf-8'>
+</head>
+<body>
+
+	<script type='text/javascript'>
+		var originHtml = "<p>1111</p><body>originData</body><table><tr>테이블 입니다.<td></td><td></td></tr></table><html><head><head><body></body></html>";
+		
+		document.write(originHtml);
+		var bodyArr = [];
+		
+		var matchBodyPattern = /<body/gi;
+		var bodyArrLen = matchBodyPattern.exec(originHtml);
+
+		console.log(bodyArrLen);
+		
+		// <body 가 모두 찾아 지면 다음으로 넘김
+		//while()
+		var i = 4;
+		var bodyArrTest = new Array(i);
+		
+		bodyArrTest[0] = '12';
+		
+		bodyArrTest.push('34');
+		//bodyArrTest.push(1);
+		//bodyArrTest[i+1] = undefined;
+		//bodyArrTest.push(2);
+		
+		console.dir(bodyArrTest);
+			
+		var changeHtml = function(domData){
+			
+		}
+	
+	</script>
+</body>
+</html>
