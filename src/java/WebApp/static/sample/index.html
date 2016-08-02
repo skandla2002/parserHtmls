@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html ng-app="phonecatApp" lang= 'en'>
+<head>
+<meta charset="UTF-8">
+<title>AngularJS Index Page</title>
+<script type="text/javascript" src="./lib/angular.js"></script>
+<script type="text/javascript" src="./app.js"></script>
+</head>
+<!-- <body>
+	<div>Hello World! {{'yet' + '!'}}</div>
+</body> -->
+<body ng-controller="PhoneListController">
+	<p>Total number of phone: 2</p>
+	<ul>
+		<li ng-repeat="phone in phones">
+			<span>{{phone.name}}</span>
+			<p>
+				{{phone.snippet}}
+			<p>
+		<!-- <li>
+			<span>Nexus S</span>
+			<p>
+				Fast just got faster with Nexus S.
+			</p>
+		</li>
+		<li>
+			<span>Motorola XOOM with Wi-Fi</span>
+			<p>
+				The Next, Next Generation tablet.
+			</p>
+		</li> -->
+	</ul>
+	{{name}}
+</body>
+			
+</html>
