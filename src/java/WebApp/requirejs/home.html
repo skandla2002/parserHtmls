@@ -5,7 +5,30 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<script data-main = "app/config" src="lib/require.js"></script>
+	<!-- 여기는 컨텐츠 -->
 
+    <!--
+            이 data-main 속성에서 requireJS가 처음 로드해야할 JS를 설정한다.
+            아래와 같이 쓰면, app폴더 아래에 config.js 파일을 열게 된다.
+    -->
+
+	<script data-main = "app/config" src="lib/require.js"></script>
+	<script type = 'text/javascript'>
+	require(['http://code.jquery.com/jquery-1.6.2.js'], function($){
+   		// 여기 $ 에는 jQuery 1.6.2 객체가 담기게 된다.
+		var jQuery  = $;
+		alert($().jquery);
+		alert($.version);
+	});
+
+	require(['http://code.jquery.com/jquery-1.5.1.js'], function($){
+		// 여기 $ 에는 jQuery 1.5.1 객체가 담기게 된다.
+
+		var jQuery  = $;
+		alert($().jquery);
+	});
+	
+	
+	</script>
 </body>
 </html>
