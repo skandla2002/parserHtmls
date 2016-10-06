@@ -28,7 +28,21 @@
 		console.log('fetchRemote');
 	}
 	
+	function loadScript(url, callback){
+		var scriptEl = document.createElement('script');
+		scriptEl.type = 'text/javascript';
+		// IE 에서는 onreadystatechange를 사용
+		scriptEl.onload = function(){
+			callback();
+		};
+		scriptEl.src = url;
+		document.getElementsByTagName('head')[0].appendChild(scriptEl);
+	}
 	
+	loadScript('example.js', function(){
+		//example.js가 로딩 완료한 시점에 실행
+	    console.log('example.js loading!!');
+	});
 	
 	
 	

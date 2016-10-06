@@ -1,0 +1,52 @@
+<html>
+<head>
+</head>
+<body>
+<script>
+
+//RequireJS 설정 객체
+//require.js가 로딩되면 이 객체를 자동으로 읽어 들여 반영한다.
+//require.js가 로딩전 사용
+//로딩 후 사용 필요시 require.config()함수를 사용
+var require = {
+  // 모듈의 기본 위치를 지정한다.
+  baseUrl: '/js/app', 
+
+  // 모듈의 단축 경로 지정 또는 이름에 대한 별칭(Alias)을 지정할 수 있다.   
+  paths: { 
+      'lib': '../lib' // "/js/lib" 과 동일하다. baseUrl 기준
+   	   // 이 설정으로 모듈 이름을 호출하면 값의 위치를 요청한다.
+       // ".js"는 자동 추가
+       'jquery': 'http://code.jquery.com/jquery-1.10.2',
+       'modernizr': 'http://modernizr.com/downloads/modernizr-latest',
+       'jindo': '/js/lib/jindo_component'
+  },
+
+  // AMD를 지원하지 않는 외부 라이브러리를 모듈로 사용할 수 있게 한다.
+  /* shim: {
+      'modernizr': { // Modernizr 라이브러리
+          exports: 'Modernizr' 
+      }
+  }, */
+  shim: {
+      'modernizr': { 
+          // Modernizr는 전역변수 "Modernizr"를 사용한다. 
+          exports: 'Modernizr' 
+      }
+      'jindo': {
+          deps: ['/js/lib/jindo.desktop.all.ns'],
+          // Jindo(네임스페이스 버전)는 전역변수 "jindo"를 사용한다.
+          exports: 'jindo' 
+      }
+  },
+  
+  // 모듈 위치 URL뒤에 덧붙여질 쿼리를 설정한다.
+  // 개발 환경에서는 브라우저 캐시를 회피하기 위해 사용할 수 있고, 
+  // 실제 서비스 환경이라면 ts값을 배포한 시간으로 설정하여 새로 캐시하게 할 수 있다.
+  urlArgs : 'ts=' + (new Date()).getTime()
+};
+
+</script>
+	<script data-main='main.js' src='../lib/require.js'></script>
+</body>
+</html>
