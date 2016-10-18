@@ -1,0 +1,80 @@
+<!doctype html>
+<html ng-app>
+<head>
+
+<!-- jquery -->
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+</head>
+<body ng-controller='TodoListController'>
+
+<script>
+	// AngularJS 발표 자료
+	
+	// 1. 정의 및 역사
+	//   2009년에 구글직원인 Misko hevery와 Adam abrons가 공동 개발하였으며 시초는 온라인 JSON Storage Service를 지원하는 소프트웨어로 개발되어 졌다.
+    //   이후 MIT 라이선스를 보유하였으며, Open Source 라이브러리로 채택되었으며 2013년 9월 기준 1.0.8 버전으로 정식 출시되었다.
+
+	// 2. Angular JS의 사용 목적 및 강점
+	  // (1) 
+	  // (2) AngularJS와 Jquery 비교
+	  
+	  $(function(){
+		  var name = $('#name');
+		  var greeting = $('#greeting');
+		  
+		  function update(){
+			  greeting.text('안녕하세요, ' + name.val() + ' !!!');
+		  }
+		  update();
+		  name.bind('keydown', function(){
+			  setTimeout(update, 0);
+		  })
+	  })
+	// 3. 사용 방법
+	//    (1) 정의
+	//    (2) Test
+	//    (3) 특수 사항: $http, pramise 등
+	
+	// 4 현장에서 사용하는 내용
+	//   - RequireJS, Bootstrap 적용
+	
+	
+ //	var app = angular.module('todoApp', []);
+//	app.controller('TodoListController', function() {
+//		    var todoList = this;
+//		    todoList.todos = [
+//		      {text:'learn angular', done:true},
+//		      {text:'build an angular app', done:false}];
+//		    todoList.hello = "Hello";
+//	}); 
+	
+	
+
+</script>
+
+<!-- 2. (2) AngularJS와 Jquery 비교 -->
+<!-- 1. AngularJS -->
+<p>Angular JS 
+<input type='text' ng-model='todo.name'>
+<div>
+{{todo.name}} hello AngularJS!
+</div>
+
+<!-- 2. Jquery -->
+<p>Jquery 
+<input type = 'text' id='name' value=''>
+<div id='greeting'>
+</div>
+
+<div >
+
+	{{todoList.hello}}
+
+</div>
+
+<!-- angularJS -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+
+</body>
+</html>
